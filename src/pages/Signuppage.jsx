@@ -126,7 +126,12 @@ const Signuppage = () => {
             </Grid>
           </Grid>
           <Grid container mt={2} justifyContent={"center"} size={12}>
-            <Typography variant="caption">
+            <Typography
+              sx={{
+                color: theme.captionColor,
+              }}
+              variant="caption"
+            >
               Already have an account? Login{" "}
             </Typography>
           </Grid>

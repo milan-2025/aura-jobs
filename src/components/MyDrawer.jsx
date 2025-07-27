@@ -8,8 +8,9 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const MyDrawer = ({ openDrawer, setOpenDrawer }) => {
+const MyDrawer = ({ links, openDrawer, setOpenDrawer }) => {
   const toggleDrawer = () => (event) => {
     if (
       event.type === "keydown" &&
@@ -20,7 +21,7 @@ const MyDrawer = ({ openDrawer, setOpenDrawer }) => {
 
     setOpenDrawer(false);
   };
-
+  const navigate = useNavigate();
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
@@ -29,13 +30,17 @@ const MyDrawer = ({ openDrawer, setOpenDrawer }) => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+        {links.map((link, index) => (
+          <ListItem key={link.name} disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate(link.path);
+              }}
+            >
               {/* <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon> */}
-              <ListItemText primary={text} />
+              <ListItemText primary={link.name} />
             </ListItemButton>
           </ListItem>
         ))}

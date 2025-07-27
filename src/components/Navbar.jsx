@@ -12,6 +12,7 @@ import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MyDrawer from "./MyDrawer";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const appBarRef = React.useRef(null); // Create a ref for the AppBar
@@ -44,6 +45,34 @@ const Navbar = () => {
     };
   }, []);
 
+  const links = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Contact",
+      path: "/contact",
+    },
+    {
+      name: "Login",
+      path: "/login",
+    },
+    {
+      name: "Sign Up",
+      path: "/sign-up",
+    },
+  ];
+
+  const isActiveStyles = {
+    color: "blue",
+  };
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  console.log("location:- ", location);
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -71,11 +100,28 @@ const Navbar = () => {
           </Button> */}
             {!inMobile ? (
               <>
-                <ProjectButton>Home</ProjectButton>
+                {/* <ProjectButton>Home</ProjectButton>
                 <ProjectButton>About</ProjectButton>
                 <ProjectButton>Contact</ProjectButton>
                 <ProjectButton>Login</ProjectButton>
-                <ProjectButton>Sign Up</ProjectButton>
+                <ProjectButton>Sign Up</ProjectButton> */}
+                {links.map((link) => {
+                  return (
+                    <ProjectButton
+                      key={link.name}
+                      onClick={() => {
+                        navigate(link.path);
+                      }}
+                      color={
+                        location.pathname == link.path ? "primary" : "inputGrey"
+                      }
+                      variant="contained"
+                      isActive={location.pathname == link.path}
+                    >
+                      {link.name}
+                    </ProjectButton>
+                  );
+                })}
               </>
             ) : (
               <IconButton
@@ -95,7 +141,11 @@ const Navbar = () => {
         </AppBar>
       </Box>
       <Box sx={{ height: appBarHeight }} />
-      <MyDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+      <MyDrawer
+        links={links}
+        openDrawer={openDrawer}
+        setOpenDrawer={setOpenDrawer}
+      />
     </>
   );
 };
