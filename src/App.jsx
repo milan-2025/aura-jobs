@@ -8,6 +8,7 @@ import { CssBaseline } from "@mui/material";
 import projectColors from "./assets/util/projectColors";
 import Signuppage from "./pages/Signuppage";
 import JobRecomendations from "./pages/JobRecomendations";
+import ResumeBuilder from "./pages/ResumeBuilder";
 
 // import { ThemeProvider } from "@mui/material";
 // import theme from "./theme";
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "job-recommendations",
         element: <JobRecomendations />,
+      },
+      {
+        path: "resume-builder",
+        element: <ResumeBuilder />,
       },
     ],
   },
