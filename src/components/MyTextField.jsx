@@ -1,6 +1,7 @@
 import { createTheme, TextField, ThemeProvider, useTheme } from "@mui/material";
+import React from "react";
 
-const MyTextField = ({ myPadding, ...props }) => {
+const MyTextField = React.memo(({ myPadding, ...props }) => {
   const customTheme = (outerTheme) =>
     createTheme({
       palette: {
@@ -13,7 +14,7 @@ const MyTextField = ({ myPadding, ...props }) => {
               padding: myPadding ? "0.5rem" : "",
               borderRadius: "10px 10px",
               backgroundColor: "#F0f2f5",
-              paddingBottom: !myPadding ? "0.3rem" : "0.5rem",
+              paddingBottom: !myPadding ? "" : "0.5rem",
 
               color: outerTheme.textBlack,
               // padding: "0.5rem",
@@ -62,6 +63,6 @@ const MyTextField = ({ myPadding, ...props }) => {
       </ThemeProvider>
     </>
   );
-};
+});
 
 export default MyTextField;

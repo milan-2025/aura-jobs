@@ -9,6 +9,8 @@ import projectColors from "./assets/util/projectColors";
 import Signuppage from "./pages/Signuppage";
 import JobRecomendations from "./pages/JobRecomendations";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 // import { ThemeProvider } from "@mui/material";
 // import theme from "./theme";
@@ -60,7 +62,9 @@ function App() {
     <>
       <ThemeProvider theme={myTheme}>
         <CssBaseline />
-        <RouterProvider router={router} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <RouterProvider router={router} />
+        </LocalizationProvider>
         {/* {/* <Homepage />  */}
       </ThemeProvider>
     </>
