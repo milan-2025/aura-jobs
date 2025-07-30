@@ -10,6 +10,7 @@ import MyTextField from "../components/MyTextField";
 import PersonalInfo from "../components/PersonalInfo";
 import ProffessionalSummary from "../components/ProffessionalSummary";
 import WorkExp from "../components/WorkExp";
+import Education from "../components/Education";
 // import { Button } from "react-native-paper";
 
 const ResumeBuilder = () => {
@@ -50,6 +51,13 @@ const ResumeBuilder = () => {
       ),
       proggress: 30,
     },
+    {
+      name: "education",
+      component: (
+        <Education nextErrors={nextErrors} setNextErrors={setNextErrors} />
+      ),
+      proggress: 45,
+    },
   ];
   const [currentStep, setCurrentStep] = useState("personalInfo");
   const renderCurrentStep = (step) => {
@@ -77,7 +85,7 @@ const ResumeBuilder = () => {
   };
 
   const onFirst = currentStep == steps[0].name;
-  const onLast = currentStep == steps[2].name;
+  const onLast = currentStep == steps[3].name;
   const handleBack = () => {
     if (!onFirst) {
       let currentIndex = steps.findIndex((item) => {

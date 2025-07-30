@@ -24,21 +24,14 @@ const WorkExp = () => {
   const [experiences, setExperiences] = useState([]);
 
   const [showSoloExp, setShowSoloExp] = useState(true);
-  const [showExpCard, setShowExpCard] = useState(false);
-  const [addExpClicked, setAddExpClicked] = useState(false);
+  // const [showExpCard, setShowExpCard] = useState(false);
+  // const [addExpClicked, setAddExpClicked] = useState(false);
 
   useEffect(() => {
-    if (experiences.length > 0 && !addExpClicked) {
-      setShowExpCard(true);
-    } else {
-      setShowExpCard(false);
-    }
-    if (experiences.length == 0 || addExpClicked) {
-      setShowSoloExp(true);
-    } else {
+    if (experiences.length > 0) {
       setShowSoloExp(false);
     }
-  }, [experiences, addExpClicked]);
+  }, []);
 
   return (
     <Grid size={12} mb={4} mt={2} container justifyContent={"center"}>
@@ -50,15 +43,19 @@ const WorkExp = () => {
         Add Work Experience{" "}
       </Typography>
       {/* grab all the exp added and add them */}
-      {showExpCard && <ExpCard />}
+      {!showSoloExp && <ExpCard />}
       {showSoloExp ? (
-        <SoloExp setExperiences={setExperiences} />
+        <SoloExp
+          setShowSoloExp={setShowSoloExp}
+          setExperiences={setExperiences}
+        />
       ) : (
         <Grid container justifyContent={"center"} size={12}>
           <Grid mt={2} size={{ xs: 12, lg: 5 }}>
             <Button
               onClick={() => {
-                setAddExpClicked(true);
+                // setAddExpClicked(true);
+                setShowSoloExp(true);
               }}
               variant="contained"
               sx={{
