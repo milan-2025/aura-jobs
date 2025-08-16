@@ -45,13 +45,13 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
     { id: 1, value: "" },
   ]);
 
-  const handleResponsibility = useCallback((value, id) => {
+  const handleResponsibility = (value, id) => {
     setResposibilities((oldResponsibilities) => {
       let newResponsibilities = JSON.parse(JSON.stringify(oldResponsibilities));
       newResponsibilities[id - 1].value = value;
       return newResponsibilities;
     });
-  }, []);
+  }
   const addResponsibility = () => {
     setResposibilities((oldResponsibilities) => {
       let newResponsibilities = JSON.parse(JSON.stringify(oldResponsibilities));
@@ -80,6 +80,7 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
             label={"Company Name"}
             fullWidth
           />
+         
         </Grid>
       </Grid>
       <Grid container justifyContent={"center"} size={12}>

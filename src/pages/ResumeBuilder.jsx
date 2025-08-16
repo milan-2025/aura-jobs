@@ -26,11 +26,34 @@ const ResumeBuilder = () => {
   //     "Achievements",
   //   ];
   const [nextErrors, setNextErrors] = useState(false);
+  const [saveClicked, setSaveClicked] = useState(false);
+  const handleNext = () => {
+    // setSaveClicked(true);
+    if (!nextErrors) {
+      let currentIndex = steps.findIndex((item) => {
+        return item.name == currentStep;
+      });
+      if (currentIndex == steps.length - 1) {
+        //we are on last
+      } else {
+        // save currentStep info
+        // saveCurrentInfoFn();
+        let nextStep = steps[currentIndex + 1];
+        setCurrentStep(nextStep.name);
+      }
+    } else {
+      alert("some input next errors");
+    }
+  };
+
+  useEffect(()=>{
+    setSaveClicked(false);
+  },[])
   const steps = [
     {
       name: "personalInfo",
       component: (
-        <PersonalInfo nextErrors={nextErrors} setNextErrors={setNextErrors} />
+        <PersonalInfo setSavedClicked={setSaveClicked} saveClicked={saveClicked} handleNext={handleNext}/>
       ),
       proggress: 0,
     },
@@ -40,6 +63,7 @@ const ResumeBuilder = () => {
         <ProffessionalSummary
           nextErrors={nextErrors}
           setNextErrors={setNextErrors}
+          saveClicked={saveClicked}
         />
       ),
       proggress: 15,
@@ -47,14 +71,20 @@ const ResumeBuilder = () => {
     {
       name: "workExp",
       component: (
-        <WorkExp nextErrors={nextErrors} setNextErrors={setNextErrors} />
+        <WorkExp nextErrors={nextErrors} setNextErrors={setNextErrors} 
+        saveClicked={saveClicked}
+        
+        />
       ),
       proggress: 30,
     },
     {
       name: "education",
       component: (
-        <Education nextErrors={nextErrors} setNextErrors={setNextErrors} />
+        <Education nextErrors={nextErrors} setNextErrors={setNextErrors}
+        saveClicked={saveClicked}
+        
+        />
       ),
       proggress: 45,
     },
@@ -68,22 +98,7 @@ const ResumeBuilder = () => {
     return foundStep.component;
   };
 
-  const handleNext = () => {
-    if (!nextErrors) {
-      let currentIndex = steps.findIndex((item) => {
-        return item.name == currentStep;
-      });
-      if (currentIndex == steps.length - 1) {
-        //we are on last
-      } else {
-        let nextStep = steps[currentIndex + 1];
-        setCurrentStep(nextStep.name);
-      }
-    } else {
-      alert("some input next  errors");
-    }
-  };
-
+  
   const onFirst = currentStep == steps[0].name;
   const onLast = currentStep == steps[3].name;
   const handleBack = () => {
@@ -158,7 +173,7 @@ const ResumeBuilder = () => {
                   borderRadius: "25px",
                 }}
                 color="primary"
-                onClick={handleNext}
+                onClick={()=>{setSaveClicked(true)}}
                 size="small"
               >
                 Save & Continue

@@ -1,7 +1,9 @@
-import { createTheme, TextField, ThemeProvider, useTheme } from "@mui/material";
-import React from "react";
+import { createTheme, FormHelperText, TextField, ThemeProvider, useTheme } from "@mui/material";
+import React, { forwardRef } from "react";
 
-const MyTextField = React.memo(({ myPadding, ...props }) => {
+const MyTextField = forwardRef((props,ref) => {
+  let { myPadding, hasError } = props;
+  
   const customTheme = (outerTheme) =>
     createTheme({
       palette: {
@@ -59,7 +61,11 @@ const MyTextField = React.memo(({ myPadding, ...props }) => {
   return (
     <>
       <ThemeProvider theme={customTheme(outerTheme)}>
-        <TextField {...props} />
+        <TextField inputRef={ref} {...props} />
+        {hasError && !hasError.chk && <FormHelperText sx={{
+          marginLeft: '0.5rem',
+          marginTop: '0.3rem'
+        }} error={true}>{hasError.message}</FormHelperText>}
       </ThemeProvider>
     </>
   );
