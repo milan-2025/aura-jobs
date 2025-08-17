@@ -10,6 +10,8 @@ import MyTextField from "./MyTextField";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useCallback, useState } from "react";
+import { useInput } from "../hooks/useInput";
+import { isNotEmpty, isValidDate, isValidDateRange } from "../assets/util/formValidations";
 
 function getMonthAndYear(dateString) {
   // Create a new Date object from the input string.
@@ -37,10 +39,24 @@ function getMonthAndYear(dateString) {
 const SoloExp = ({ setExperiences, setShowSoloExp }) => {
   const theme = useTheme();
 
-  const [company, setCompany] = useState("");
-  const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const {enteredValue:company, setEnteredValue:setCompany, handleOnValueBlur: handleOnCompanyBlur, handleOnValueChange:handleOnCompanyChange, hasError: hasCompanyError} = useInput('',(value)=>{
+    return isNotEmpty(value)
+  })
+  const {enteredValue:title, setEnteredValue:setTitle, handleOnValueBlur: handleOnTitleBlur, handleOnValueChange:handleOnTitleChange, hasError: hasTitleError} = useInput('',(value)=>{
+    return isNotEmpty(value);
+  })
+  const {enteredValue:startDate, setEnteredValue:setStartDate, handleOnValueBlur:handleOnStartDateBlur, handleOnValueChange: handleOnstartDateChange, hasError:hasStartDateError} = useInput(null,(value)=>{
+    return isNotEmpty(value).chk?isValidDate(value):isNotEmpty(value)
+  })
+  const {enteredValue:endDate, setEnteredValue:setEndDate, handleOnValueBlur: handleOnEndDateBlur, hasError: hasEndDateError} = useInput(null,(value)=>{
+    if(value){
+      if(startDate){
+
+        return isValidDateRange(startDate,value);
+      }
+    }
+  });
+  const [minDate,setMinDate] = useState(null);
   const [responsibilities, setResposibilities] = useState([
     { id: 1, value: "" },
   ]);
@@ -65,19 +81,40 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
     });
   };
 
-  const handleSaveExperience = () => {};
+  const handleSaveExperience = () => {
+    let myStartDate = getMonthAndYear(startDate.$d);
+              let myEndDate = "Present";
+              if (endDate) {
+                myEndDate = getMonthAndYear(endDate.$d);
+              }
+              let obj = {
+                company,
+                title,
+                myStartDate,
+                myEndDate,
+                responsibilities,
+              };
+              //   console.log("exp obj-", obj);
+              setExperiences((oldExp) => {
+                let newExp = JSON.parse(JSON.stringify(oldExp));
+                console.log("newEXP-", newExp);
+                newExp.push(obj);
+                return newExp;
+              });
+              setShowSoloExp(false);
+  };
 
   return (
     <Grid id="workexp" size={12} container justifyContent={"center"}>
       <Grid container justifyContent={"center"} size={12}>
         <Grid mt={2} size={{ xs: 12, lg: 5 }}>
           <MyTextField
-            onChange={(e) => {
-              setCompany(e.target.value);
-            }}
+            onChange={handleOnCompanyChange}
             value={company}
+            onBlur={handleOnCompanyBlur}
             variant={"filled"}
             label={"Company Name"}
+            hasError={hasCompanyError}
             fullWidth
           />
          
@@ -87,9 +124,9 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
         <Grid mt={2} size={{ xs: 12, lg: 5 }}>
           <MyTextField
             variant={"filled"}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
+            onChange={handleOnTitleChange}
+            onBlur={handleOnTitleBlur}
+            hasError={hasTitleError}
             value={title}
             label={"Title"}
             fullWidth
@@ -122,18 +159,25 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
                   variant: "filled",
                   label: "Start Date", // Ensure the TextField uses the outlined variant
                   fullWidth: true,
+                  hasError:hasStartDateError,
+                  onBlur: handleOnStartDateBlur
+                  
                 },
               }}
               onChange={(e) => {
                 setStartDate(e);
+                handleOnEndDateBlur();
+                setMinDate(e);
               }}
               value={startDate}
+
             />
           </Grid>
           <Grid container alignItems={"strech"} size={6}>
             <MobileDatePicker
               label="End Date"
               enableAccessibleFieldDOMStructure={false}
+              minDate={minDate}
               // value={selectedDate}
               // onChange={(newValue) => setSelectedDate(newValue)}
               // Use the `slots` prop to provide your custom TextField component
@@ -147,6 +191,9 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
                   variant: "filled",
                   label: "End Date", // Ensure the TextField uses the outlined variant
                   fullWidth: true, // Make the TextField take full width
+                  // helperText: 'Date cannot be before start date'
+                  onBlur: handleOnEndDateBlur,
+                  // hasError: hasEndDateError
                 },
               }}
               onChange={(e) => {
@@ -155,9 +202,11 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
               value={endDate}
             />
             {/* <FormHelperText mt>Leave blank to set to present</FormHelperText> */}
-            <Typography m={0} mt={-1.4} ml={1} variant="caption">
+            {hasEndDateError && !hasEndDateError.chk ? <Typography color="error" m={0} mt={-1.4} ml={1} variant="caption">
+              {hasEndDateError.message}
+            </Typography> :  <Typography m={0} mt={-1.4} ml={1} variant="caption">
               Leave blank to set to present
-            </Typography>
+            </Typography>}
           </Grid>
         </Grid>
       </Grid>
@@ -224,26 +273,7 @@ const SoloExp = ({ setExperiences, setShowSoloExp }) => {
         <Grid mt={2} size={{ xs: 12, lg: 5 }}>
           <Button
             onClick={() => {
-              let myStartDate = getMonthAndYear(startDate.$d);
-              let myEndDate = "Present";
-              if (endDate) {
-                myEndDate = getMonthAndYear(endDate.$d);
-              }
-              let obj = {
-                company,
-                title,
-                myStartDate,
-                myEndDate,
-                responsibilities,
-              };
-              //   console.log("exp obj-", obj);
-              setExperiences((oldExp) => {
-                let newExp = JSON.parse(JSON.stringify(oldExp));
-                console.log("newEXP-", newExp);
-                newExp.push(obj);
-                return newExp;
-              });
-              setShowSoloExp(false);
+              handleSaveExperience()
             }}
             variant="contained"
             color="primary"

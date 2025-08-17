@@ -1,11 +1,47 @@
-import { Grid, Typography, useTheme } from "@mui/material";
+import { Button, Grid, Typography, useTheme } from "@mui/material";
 import MyTextField from "./MyTextField";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import { useInput } from "../hooks/useInput";
+import { isNotEmpty } from "../assets/util/formValidations";
+import { useEffect } from "react";
 
-const ProffessionalSummary = ({ setNextErrors }) => {
+const ProffessionalSummary = ({ setCurrentStep,currentStep }) => {
   const theme = useTheme();
   //   setNextErrors(true);
+
+  const {enteredValue:summary, setEnteredValue: setSummary, handleOnValueBlur:handleSummaryOnBlur, handleOnValueChange: handleSummaryOnChange, hasError:hasSummaryError} = useInput('',(value)=>{
+    return isNotEmpty(value)
+  })
+
+  const handleBack = ()=>{
+    setCurrentStep('personalInfo')
+  }
+  const displayErrors = ()=>{
+    handleSummaryOnBlur();
+  }
+  const handleSaveClicked = ()=>{
+    let error = !hasSummaryError.chk
+    if(error){
+      displayErrors();
+    }
+    else{
+      localStorage.setItem(currentStep,JSON.stringify({
+        summary
+      }))
+      setCurrentStep('workExp')
+    }
+  }
+
+  useEffect(()=>{
+    if(localStorage.getItem(currentStep)){
+      let data = JSON.parse(localStorage.getItem(currentStep))
+      setSummary(data.summary);
+    }
+  },[])
+
   return (
+    <>
+    
     <Grid size={12} mt={2} container justifyContent={"center"}>
       <Typography
         textAlign={"center"}
@@ -23,6 +59,10 @@ const ProffessionalSummary = ({ setNextErrors }) => {
             multiline={true}
             rows={7}
             myPadding={true}
+            value={summary}
+            onChange={handleSummaryOnChange}
+            onBlur={handleSummaryOnBlur}
+            hasError={hasSummaryError}
           />
           <Grid mt={1} width={"fit-content"} sx={{ cursor: "pointer" }}>
             <Typography
@@ -44,6 +84,41 @@ const ProffessionalSummary = ({ setNextErrors }) => {
         </Grid>
       </Grid>
     </Grid>
+    <Grid container mb={4} size={12}>
+              {/* <Grid > */}
+              <Grid textAlign={"start"} size={6}>
+            
+                   <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "25px",
+                    }}
+                    color="inputGrey"
+                    onClick={handleBack}
+                    size="small"
+                  >
+                    Back
+                  </Button>
+              
+              </Grid>
+              <Grid textAlign={"end"} size={6}>
+              
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "25px",
+                    }}
+                    color="primary"
+                    onClick={handleSaveClicked}
+                    size="small"
+                  >
+                    Save & Continue
+                  </Button>
+              
+              </Grid>
+              {/* </Grid> */}
+            </Grid>
+    </>
   );
 };
 

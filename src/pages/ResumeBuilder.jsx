@@ -25,70 +25,31 @@ const ResumeBuilder = () => {
   //     "Projects",
   //     "Achievements",
   //   ];
-  const [nextErrors, setNextErrors] = useState(false);
-  const [saveClicked, setSaveClicked] = useState(false);
-  const handleNext = () => {
-    // setSaveClicked(true);
-    if (!nextErrors) {
-      let currentIndex = steps.findIndex((item) => {
-        return item.name == currentStep;
-      });
-      if (currentIndex == steps.length - 1) {
-        //we are on last
-      } else {
-        // save currentStep info
-        // saveCurrentInfoFn();
-        let nextStep = steps[currentIndex + 1];
-        setCurrentStep(nextStep.name);
-      }
-    } else {
-      alert("some input next errors");
-    }
-  };
+  // const [nextErrors, setNextErrors] = useState(false);
+  // const [saveClicked, setSaveClicked] = useState(false);
+  // const handleNext = () => {
+  //   // setSaveClicked(true);
+  //   if (!nextErrors) {
+  //     let currentIndex = steps.findIndex((item) => {
+  //       return item.name == currentStep;
+  //     });
+  //     if (currentIndex == steps.length - 1) {
+  //       //we are on last
+  //     } else {
+  //       // save currentStep info
+  //       // saveCurrentInfoFn();
+  //       let nextStep = steps[currentIndex + 1];
+  //       setCurrentStep(nextStep.name);
+  //     }
+  //   } else {
+  //     alert("some input next errors");
+  //   }
+  // };
 
-  useEffect(()=>{
-    setSaveClicked(false);
-  },[])
-  const steps = [
-    {
-      name: "personalInfo",
-      component: (
-        <PersonalInfo setSavedClicked={setSaveClicked} saveClicked={saveClicked} handleNext={handleNext}/>
-      ),
-      proggress: 0,
-    },
-    {
-      name: "proffessionalSummary",
-      component: (
-        <ProffessionalSummary
-          nextErrors={nextErrors}
-          setNextErrors={setNextErrors}
-          saveClicked={saveClicked}
-        />
-      ),
-      proggress: 15,
-    },
-    {
-      name: "workExp",
-      component: (
-        <WorkExp nextErrors={nextErrors} setNextErrors={setNextErrors} 
-        saveClicked={saveClicked}
-        
-        />
-      ),
-      proggress: 30,
-    },
-    {
-      name: "education",
-      component: (
-        <Education nextErrors={nextErrors} setNextErrors={setNextErrors}
-        saveClicked={saveClicked}
-        
-        />
-      ),
-      proggress: 45,
-    },
-  ];
+  // useEffect(()=>{
+  //   setSaveClicked(false);
+  // },[])
+  
   const [currentStep, setCurrentStep] = useState("personalInfo");
   const renderCurrentStep = (step) => {
     let foundStep = steps.find((item) => {
@@ -98,18 +59,51 @@ const ResumeBuilder = () => {
     return foundStep.component;
   };
 
-  
-  const onFirst = currentStep == steps[0].name;
-  const onLast = currentStep == steps[3].name;
-  const handleBack = () => {
-    if (!onFirst) {
-      let currentIndex = steps.findIndex((item) => {
-        return item.name == currentStep;
-      });
-      let backStep = steps[currentIndex - 1];
-      setCurrentStep(backStep.name);
-    }
-  };
+  const steps = [
+    {
+      name: "personalInfo",
+      component: (
+        <PersonalInfo  currentStep={currentStep} setCurrentStep={setCurrentStep}/>
+      ),
+      proggress: 0,
+    },
+    {
+      name: "proffessionalSummary",
+      component: (
+        <ProffessionalSummary
+          currentStep={currentStep} setCurrentStep={setCurrentStep}
+        />
+      ),
+      proggress: 15,
+    },
+    {
+      name: "workExp",
+      component: (
+        <WorkExp currentStep={currentStep} setCurrentStep={setCurrentStep}
+        />
+      ),
+      proggress: 30,
+    },
+    {
+      name: "education",
+      component: (
+        <Education currentStep={currentStep} setCurrentStep={setCurrentStep}
+        
+        />
+      ),
+      proggress: 45,
+    },
+  ];
+
+  // const handleBack = () => {
+  //   if (!onFirst) {
+  //     let currentIndex = steps.findIndex((item) => {
+  //       return item.name == currentStep;
+  //     });
+  //     let backStep = steps[currentIndex - 1];
+  //     setCurrentStep(backStep.name);
+  //   }
+  // };
 
   useEffect(() => {
     const currentProggress = steps.find((item) => {
@@ -148,40 +142,7 @@ const ResumeBuilder = () => {
 
         {renderCurrentStep(currentStep)}
 
-        <Grid container mb={4} size={12}>
-          {/* <Grid > */}
-          <Grid textAlign={"start"} size={6}>
-            {!onFirst && (
-              <Button
-                variant="contained"
-                sx={{
-                  borderRadius: "25px",
-                }}
-                color="inputGrey"
-                onClick={handleBack}
-                size="small"
-              >
-                Back
-              </Button>
-            )}
-          </Grid>
-          <Grid textAlign={"end"} size={6}>
-            {!onLast && (
-              <Button
-                variant="contained"
-                sx={{
-                  borderRadius: "25px",
-                }}
-                color="primary"
-                onClick={()=>{setSaveClicked(true)}}
-                size="small"
-              >
-                Save & Continue
-              </Button>
-            )}
-          </Grid>
-          {/* </Grid> */}
-        </Grid>
+        
       </Grid>
     </Grid>
   );

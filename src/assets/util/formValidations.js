@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function isValidEmail(email) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return {
@@ -24,6 +26,22 @@ export function isInteger(value) {
     return { 
         chk:Number.isInteger(num),
         message: 'Enter a valid Phone Number.'
+    }
+}
+
+export function isValidDateRange(startDate,endDate) {
+     startDate = dayjs(startDate);
+     endDate = dayjs(endDate);
+    return {
+        chk: startDate.isBefore(endDate),
+        message: 'Start date must be before end date.'
+    }
+}
+
+export function isValidDate(value) {
+    return {
+        chk: dayjs.isDayjs(value),
+        message: 'Enter a valid date.'
     }
 }
 

@@ -1,8 +1,11 @@
 import { createTheme, FormHelperText, TextField, ThemeProvider, useTheme } from "@mui/material";
 import React, { forwardRef } from "react";
 
-const MyTextField = forwardRef((props,ref) => {
-  let { myPadding, hasError } = props;
+const MyTextField = forwardRef(({myPadding, hasError, ...props},ref) => {
+  // let { myPadding, hasError } = props;
+
+  // props.myPadding && delete props.myPadding
+  // props.hasError && delete props.hasError
   
   const customTheme = (outerTheme) =>
     createTheme({

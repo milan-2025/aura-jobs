@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export const useInput = (defaultValue,validationFn)=>{
@@ -6,7 +6,14 @@ export const useInput = (defaultValue,validationFn)=>{
     const [enteredValue,setEnteredValue] = useState(defaultValue);
     const [didEdit,setDidEdit] = useState(false);
     // const [hasError,setHasError] = useState(false);
+    useEffect(()=>{
 
+
+
+        if(enteredValue && enteredValue.length>0){
+            setDidEdit(true)
+        }
+    },[enteredValue])
 
     const handleOnValueBlur = ()=>{
         setDidEdit(true);
@@ -24,6 +31,7 @@ export const useInput = (defaultValue,validationFn)=>{
         enteredValue,
         hasError,
         didEdit,
+        setDidEdit,
         setEnteredValue,
         handleOnValueBlur,
         handleOnValueChange
